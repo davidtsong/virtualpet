@@ -38,16 +38,24 @@ public class VirtualPetFace extends JFrame implements ActionListener{
     private ArrayList<Image> pics;
     private Timer timer;
     
+    private static final int TIMERSPEED = 60;// added by nate
+    
+    private String currentImageGroup;//	added by nate, the current group of images ex: petType+"_"+mood+"_"+("intro", "cycle", or "outro")
+    private int currentFrame;//			added by nate, what frame the current pic is set to
+    private int numberOfFrames;//		added by nate, how many total frames there are in current mood
+    private boolean isEndOfLoop;//		added by nate, is at the last frame of a loop
+    private int numberOfLoops;//		added by nate, how many total loops there should be before changing mood
+    private int currentLoop;//			added by nate, the current loop in my image cycling method
+    private String currentMood;//		added by nate, stores the current mood
+    private String petType;//			added by nate, word prier to the mood in the picture
 
     private static final String imageBase = "./pet_images/";
     
-    public static void main(String args[]) 
-    {
-        VirtualPet newPet = new VirtualPet();   
+    public static void main(String args[]) {
+//        VirtualPet newPet = new VirtualPet();   
     }
     
-    public VirtualPetFace() 
-    {
+    public VirtualPetFace() {
         try {
             javax.swing.SwingUtilities.invokeAndWait(new Runnable() {
                 public void run() {
@@ -65,15 +73,17 @@ public class VirtualPetFace extends JFrame implements ActionListener{
         String curDir = System.getProperty("user.dir");
         
         base = curDir + "/" + imageBase;
+        //System.out.println(base);
         pics = new ArrayList<Image>();
-        timer = new Timer(400, this);
+        timer = new Timer(TIMERSPEED, this);
         //timer.setInitialDelay(1000);
 
         getAllImages();
         
         setBackground();
-        //setImage("angel");      
-        //setMessage("Hello, and Welcome!");
+        setPetType("host");
+        setImage("normal");      
+        setMessage("Hello, and Welcome!");
     }
     
     public void createGUI() {
@@ -133,8 +143,98 @@ public class VirtualPetFace extends JFrame implements ActionListener{
     public void setImage(String mood) {
         timer.stop();
         pics.clear();
+        currentLoop = 0;
+        numberOfLoops = 1;
+        currentFrame = 0;
+        isEndOfLoop = false;
         getImages(mood);
         timer.start(); 
+    }
+    
+    public void setImage(String mood, int loops) {
+    	timer.stop();
+        pics.clear();
+        numberOfLoops = loops;
+        currentLoop = 0;
+        currentFrame = 0;
+        isEndOfLoop = false;
+        getImages(mood);
+        timer.start(); 
+    }
+    
+    public void setImageGroupCycle(String moodGroup, int cycles) {
+    	setImage(moodGroup+"_intro");
+    	endPicLoop(moodGroup+"_cycle", cycles);
+    	currentImageGroup = moodGroup;
+    	endPicLoop(moodGroup+"_outro");
+    	endPicLoop();
+    	currentImageGroup = "normal";
+    	
+    }
+    public void setImageGroup(String moodGroup) {
+    	setImage(moodGroup+"_intro", 1);
+    	endPicLoop(moodGroup+"_cycle");
+    	currentImageGroup = moodGroup;
+    }
+    public void endImageGroup() {
+    	endPicLoop(currentImageGroup+"_outro", 1);
+    	endPicLoop();
+    	currentImageGroup = "normal";
+    	
+    }
+    
+    public void endPicLoop() {
+    	if (!currentMood.equals("normal")) {
+    		int var;
+    		for (currentLoop = 0; currentLoop<numberOfLoops; currentLoop++) {
+    			var = 0;
+    			while (!isEndOfLoop) {
+    				var++;
+    				System.out.print("");
+    			}
+    			
+    			isEndOfLoop = false;
+    		}
+    		setImage("normal");
+    		
+    	}
+    }
+    public void endPicLoop(String newMood) {
+    	if (!currentMood.equals(newMood)) {
+    		System.out.println("test-3"); // --------------------------------------
+    		int var;
+    		for (currentLoop = 0; currentLoop<numberOfLoops; currentLoop++) {
+    			var = 0;
+    			while (!isEndOfLoop) {
+    				var++;
+    				System.out.print("");
+    			}
+    			System.out.println("test-1");
+    			isEndOfLoop = false;
+    		}
+    		System.out.println("test-2");
+    		setImage(newMood);
+    	}
+    }
+    public void endPicLoop(String newMood , int newLoopVal) {
+    	if (!currentMood.equals(newMood)) {
+    		int var;
+    		for (currentLoop = 0; currentLoop<numberOfLoops; currentLoop++) {
+    			var = 0;
+    			while (!isEndOfLoop) {
+    				var++;
+    				System.out.print("");
+    			}
+    			isEndOfLoop = false;
+    		}
+    		setImage(newMood, newLoopVal);
+    	}
+    }
+    
+    
+    
+    public void setPetType(String petType) {
+        this.petType = petType;
     }
 
      public void actionPerformed(ActionEvent e) {
@@ -155,20 +255,23 @@ public class VirtualPetFace extends JFrame implements ActionListener{
         File dir = new File(base);   
         files  = dir.list();
         allPics = new Image[files.length];
+        
         for (int i = 0; i < files.length; i++) {
             //System.err.println(files[i]);
             allPics[i]=createImage(base + files[i],"");
-            
         }
         //System.err.println(pics.size());
     }       
         
         
     public void getImages(final String mood) {
-    
+    numberOfFrames = 0;
+    currentMood = mood;
         for (int i = 0; i < files.length; i++) {
-            if (files[i].contains(mood)) {
+            if (files[i].contains(petType+"_"+mood)) {
                 pics.add(allPics[i]);
+                numberOfFrames++;
+                
             }
         }
         //System.err.println(pics.size());
@@ -190,6 +293,11 @@ public class VirtualPetFace extends JFrame implements ActionListener{
             super.paintComponent(g);
             if (pics.size() > 0) {
                 g.drawImage(pics.get(loopslot), 0, 0, this.getWidth(), this.getHeight(), null);
+                currentFrame++;
+                if (currentFrame == numberOfFrames) {
+                	isEndOfLoop = true;
+                	currentFrame = 0;
+                }
             }
         }
 

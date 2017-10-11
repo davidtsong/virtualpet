@@ -7,13 +7,16 @@
  */
 import java.awt.*;
 import javax.swing.*;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
-public class VirtualPetGUI
+
+
+public class VirtualPetGUI extends JFrame
 {
-    private ImagePanel imagePanel; 
-    private JTextPane textpane;
+	private ImagePanel imagePanel; 
+    private JTextPane textPane;
     private JScrollPane scrollPane; 
     private Image image;
     
@@ -26,7 +29,9 @@ public class VirtualPetGUI
     private JButton buyNewCarButton;
     private JButton buyStocksButton;
     private JButton moneyLaunderButton;
-    private JButton workOvertimeButton; 
+    private JButton workOvertimeButton;
+    private ArrayList<Image> pics;
+	public int loopslot = 0;
     
     private static final int SCREEN_WIDTH = 600;
     private static final int SCREEN_HEIGHT = 600;
@@ -155,6 +160,27 @@ public class VirtualPetGUI
     public JButton getResetButton()
     {
         return resetButton;
+    }
+
+	public void setText(String string) {
+		
+		
+	}
+	
+	public class ImagePanel extends JPanel {
+        public ImagePanel( ) {
+            super();
+        }
+
+        public void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            if (pics.size() > 0) {
+                g.drawImage((pics).get(loopslot), 0, 0, this.getWidth(), this.getHeight(), null);
+                
+                
+            }
+        }
+
     }
 
 
