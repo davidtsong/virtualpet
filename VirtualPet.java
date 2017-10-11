@@ -60,9 +60,9 @@ public class VirtualPet
     }
     
     public void useGUIButtons() {
-    	if (gui.) {
-    		
-    	}
+//    	if (gui.) {
+//    		
+//    	}
     }
 
     public void tick() throws InterruptedException {
