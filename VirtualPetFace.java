@@ -16,6 +16,7 @@ import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -40,6 +41,19 @@ public class VirtualPetFace extends JFrame implements ActionListener{
     
     private static final int TIMERSPEED = 60;// added by nate
     
+    private JButton catButton;
+	private JButton dogButton;
+	private JButton resetButton;
+	private JButton continueButton;
+	private JButton investButton;
+	private JButton relaxButton;
+	private JButton buyNewCarButton;
+	private JButton buyStocksButton;
+	private JButton moneyLaunderButton;
+	private JButton workOvertimeButton; 
+	private JButton startButton;
+	
+    
     private String currentImageGroup;//	added by nate, the current group of images ex: petType+"_"+mood+"_"+("intro", "cycle", or "outro")
     private int currentFrame;//			added by nate, what frame the current pic is set to
     private int numberOfFrames;//		added by nate, how many total frames there are in current mood
@@ -55,7 +69,7 @@ public class VirtualPetFace extends JFrame implements ActionListener{
 //        VirtualPet newPet = new VirtualPet();   
     }
     
-    public VirtualPetFace() {
+    public VirtualPetFace(String petType) {
         try {
             javax.swing.SwingUtilities.invokeAndWait(new Runnable() {
                 public void run() {
@@ -66,10 +80,10 @@ public class VirtualPetFace extends JFrame implements ActionListener{
             System.err.println("createGUI didn't successfully complete");
         }
         
-        init();
+        init(petType);
     }
     
-    public void init() {
+    public void init(String petType) {
         String curDir = System.getProperty("user.dir");
         
         base = curDir + "/" + imageBase;
@@ -80,14 +94,18 @@ public class VirtualPetFace extends JFrame implements ActionListener{
 
         getAllImages();
         
+        startButton = new JButton ("Start");
+        startButton.setBounds(WIDTH + 50, 300, 100, 20);
+        add(startButton);
+        
         setBackground();
-        setPetType("host");
+        setPetType(petType);
         setImage("normal");      
         setMessage("Hello, and Welcome!");
     }
     
     public void createGUI() {
-        setMaximumSize(new Dimension(WIDTH, HEIGHT));
+    	setMaximumSize(new Dimension(WIDTH, HEIGHT));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(new Dimension(WIDTH, HEIGHT));
         Container contentPane = this.getContentPane();
@@ -237,20 +255,45 @@ public class VirtualPetFace extends JFrame implements ActionListener{
         this.petType = petType;
     }
 
-     public void actionPerformed(ActionEvent e) {
-            loopslot++;
-
-            if (loopslot >= pics.size()) {
-                loopslot = 0;
-            }
-
-            imagePanel.repaint();
-
-            if (loopslot == pics.size()) {
-                timer.restart();
-            }
-        }
-
+    public void actionPerformed(ActionEvent e) {
+    	Object source = e.getSource();
+    	if (source.equals(catButton)) {
+    		
+    	} else if (source.equals(dogButton)) {
+    		
+    	} else if (source.equals(buyNewCarButton)) {
+    		
+    	} else if (source.equals(continueButton)) {
+    		
+    	} else if (source.equals(startButton)) {
+    		
+    	} else if (source.equals(investButton)) {
+    		
+    	} else if (source.equals(moneyLaunderButton)) {
+    		
+    	} else if (source.equals(buyStocksButton)) {
+    		
+    	} else if (source.equals(relaxButton)) {
+    		
+    	} else if (source.equals(workOvertimeButton)) {
+    		
+    	} else if (source.equals(resetButton)) {
+    		
+    	} else {
+    		loopslot++;
+		    
+		    if (loopslot >= pics.size()) {
+		        loopslot = 0;
+		    }
+		
+		    imagePanel.repaint();
+		
+		    if (loopslot == pics.size()) {
+		        timer.restart();
+		    }
+    	}
+    }
+    
     public void getAllImages() {
         File dir = new File(base);   
         files  = dir.list();
@@ -322,6 +365,85 @@ public class VirtualPetFace extends JFrame implements ActionListener{
             return true;
         }
     }
+    
+
+    public JButton getContinueButton() 
+    {
+        return continueButton; 
+    }
+   
+    public JButton getStartButton()
+    {
+        return startButton;
+    }
+    
+    public JButton getCatButton()
+    {
+        return catButton;
+    }
+
+    public JButton getDogButton()
+    {
+        return dogButton;
+    }
+
+    public JButton getInvestButton()
+    {
+        return investButton;
+    }
+
+    public JButton getRelaxbutton()
+    {
+        return relaxButton;
+    }
+
+    public JButton getBuyNewCarButton()
+    {
+        return buyNewCarButton;
+    }
+
+    public JButton getBuyStocksButton()
+    {
+        return buyStocksButton;
+    }
+
+    public JButton getWorkOvertimeButton()
+    {
+        return workOvertimeButton;
+    }
+
+    public JButton getResetButton()
+    {
+        return resetButton;
+    }
+    
+    public JButton getMoneyLaunderButton()
+    {
+        return moneyLaunderButton;
+    }
+    
+    /*public void hideAllButtons()
+    {
+        startButton.setVisible(false);
+        investButton.setVisible(false);
+        relaxButton.setVisible(false);
+        buyNewCarButton.setVisible(false);
+        buyStocksButton.setVisible(false);
+        moneyLaunderButton.setVisible(false);
+        workOvertimeButton.setVisible(false);
+        resetButton.setVisible(false);
+    }
+    */
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 }
 
  
