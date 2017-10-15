@@ -21,6 +21,7 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.Timer;
 import javax.swing.border.Border;
@@ -43,6 +44,7 @@ public class VirtualPetFace extends JFrame implements ActionListener{
     
     private JButton catButton;
 	private JButton dogButton;
+	private JButton rabbitButton;
 	private JButton resetButton;
 	private JButton continueButton;
 	private JButton investButton;
@@ -53,7 +55,11 @@ public class VirtualPetFace extends JFrame implements ActionListener{
 	private JButton workOvertimeButton; 
 	private JButton startButton;
 	
-    
+	private JTextField inputArea;
+    private String inputText;
+    private boolean newInput;
+	
+    private boolean newImageSet;
     private String currentImageGroup;//	added by nate, the current group of images ex: petType+"_"+mood+"_"+("intro", "cycle", or "outro")
     private int currentFrame;//			added by nate, what frame the current pic is set to
     private int numberOfFrames;//		added by nate, how many total frames there are in current mood
@@ -94,10 +100,6 @@ public class VirtualPetFace extends JFrame implements ActionListener{
 
         getAllImages();
         
-        startButton = new JButton ("Start");
-        startButton.setBounds(WIDTH + 50, 300, 100, 20);
-        add(startButton);
-        
         setBackground();
         setPetType(petType);
         setImage("normal");      
@@ -132,8 +134,19 @@ public class VirtualPetFace extends JFrame implements ActionListener{
         scroll.setSize(new Dimension(width, height/2));
         textArea.setPreferredSize(new Dimension(width, height/2));
         textArea.setSize(new Dimension(width, height/2));
-
-
+        
+        inputArea = new JTextField();
+        inputArea.setBounds(20, 20, width, height/4);
+        inputArea.setToolTipText("Enter a command here.");
+        inputArea.setSize(200, 200);
+        inputArea.setText("Enter a command here");
+        inputArea.setEditable(true);
+    	inputArea.addActionListener(this);
+    	add(inputArea);
+    	newInput = false;
+        
+    	settupButtons();
+        
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridwidth = 2;
         c.gridx = 0;
@@ -146,6 +159,75 @@ public class VirtualPetFace extends JFrame implements ActionListener{
         //toFront();
         setAlwaysOnTop(true);
         setAlwaysOnTop(false);
+    }
+    
+    public void settupButtons() {
+    	int x = 60;
+    	int y = 60;
+    	int deltaY = 40;
+    	final int width = 100;
+    	final int height = 20;
+    	
+    	startButton = new JButton ("Start");
+        startButton.setBounds(x, y, width, height);
+        add(startButton);
+        y+=deltaY;
+        
+        catButton = new JButton ("Choose cat");
+        catButton.setBounds(x, y, width, height);
+        add(catButton);
+        y+=deltaY;
+        
+        dogButton = new JButton ("Choose dog");
+        dogButton.setBounds(x, y, width, height);
+        add(dogButton);
+        y+=deltaY;
+        
+        rabbitButton = new JButton ("Choose rabbit");
+        rabbitButton.setBounds(x, y, width, height);
+        add(rabbitButton);
+        y+=deltaY;
+        
+        resetButton = new JButton ("Reset");
+        resetButton.setBounds(x, y, width, height);
+        add(resetButton);
+        y+=deltaY;
+        
+        continueButton = new JButton ("Continue");
+        continueButton.setBounds(x, y, width, height);
+        add(continueButton);
+        y+=deltaY;
+        
+        investButton = new JButton ("Invest");
+        investButton.setBounds(x, y, width, height);
+        add(investButton);
+        y+=deltaY;
+        
+        relaxButton = new JButton ("Relax");
+        relaxButton.setBounds(x, y, width, height);
+        add(relaxButton);
+        y+=deltaY;
+        
+        buyNewCarButton = new JButton ("Buy a new car");
+        buyNewCarButton.setBounds(x, y, width, height);
+        add(buyNewCarButton);
+        y+=deltaY;
+        
+        buyStocksButton = new JButton ("Buy stocks");
+        buyStocksButton.setBounds(x, y, width, height);
+        add(buyStocksButton);
+        y+=deltaY;
+        
+        moneyLaunderButton = new JButton ("Launder money");
+        moneyLaunderButton.setBounds(x, y, width, height);
+        add(moneyLaunderButton);
+        y+=deltaY;
+        
+        workOvertimeButton = new JButton ("Work overtime");
+        workOvertimeButton.setBounds(x, y, width, height);
+        add(workOvertimeButton);
+        y+=deltaY;
+        
     }
     
     private void setBackground() {
@@ -254,10 +336,42 @@ public class VirtualPetFace extends JFrame implements ActionListener{
     public void setPetType(String petType) {
         this.petType = petType;
     }
+    public String getPetType() {
+    	return this.petType;
+    }
 
     public void actionPerformed(ActionEvent e) {
     	Object source = e.getSource();
-    	if (source.equals(catButton)) {
+    	//-----------------------------start built-in
+    	loopslot++;
+	    
+    	if (loopslot >= pics.size()) {
+            loopslot = 0;
+        }
+        
+        imagePanel.repaint();
+        
+        if (newImageSet) {
+        	loopslot = currentFrame;
+        	newImageSet = false;
+        }
+        if (loopslot == pics.size()) {
+            timer.restart();
+        }
+        //-------------------------------end built-in
+    	
+        if (source.equals(inputArea)) {
+        	String input;
+//        	System.out.println("test-1");
+        	try {
+        		input = inputArea.getText();
+        		setInput(input);
+//        		System.out.println(input);
+        	} catch (NullPointerException exception) {
+        		input = "";
+        		System.err.println("nullPointerException");
+        	}
+        } else if (source.equals(catButton)) {
     		
     	} else if (source.equals(dogButton)) {
     		
@@ -280,18 +394,22 @@ public class VirtualPetFace extends JFrame implements ActionListener{
     	} else if (source.equals(resetButton)) {
     		
     	} else {
-    		loopslot++;
-		    
-		    if (loopslot >= pics.size()) {
-		        loopslot = 0;
-		    }
-		
-		    imagePanel.repaint();
-		
-		    if (loopslot == pics.size()) {
-		        timer.restart();
-		    }
+    		
     	}
+    }
+    
+    private void setInput(String input) {
+		newInput = true;
+		inputText = input;
+	}
+    public String getInput() {
+    	if (newInput) {
+    		newInput = false;
+//    		System.out.println("getInput test: "+inputText);
+    		return inputText;
+    	}
+//    	System.err.println("getInput test failed: "+inputText+"\n  newInput: "+newInput);
+    	return "";
     }
     
     public void getAllImages() {
@@ -317,6 +435,7 @@ public class VirtualPetFace extends JFrame implements ActionListener{
                 
             }
         }
+        newImageSet = true;
         //System.err.println(pics.size());
     }
     
@@ -421,8 +540,12 @@ public class VirtualPetFace extends JFrame implements ActionListener{
     {
         return moneyLaunderButton;
     }
+
+	public void petDie() {
+		hideAllButtons();
+	}
     
-    /*public void hideAllButtons()
+    public void hideAllButtons()
     {
         startButton.setVisible(false);
         investButton.setVisible(false);
@@ -431,9 +554,9 @@ public class VirtualPetFace extends JFrame implements ActionListener{
         buyStocksButton.setVisible(false);
         moneyLaunderButton.setVisible(false);
         workOvertimeButton.setVisible(false);
-        resetButton.setVisible(false);
+        resetButton.setVisible(true);
     }
-    */
+    
     
     
     
