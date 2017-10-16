@@ -53,6 +53,8 @@ public class VirtualPet
                 initialize();
             }
         });
+        
+        face.setPetType("cat");
 
         initializeButtons();
         face.hideAllButtons();
@@ -83,7 +85,7 @@ public class VirtualPet
     {
 
         face.setMessage("Let's do this!");
-        face.setImage("cat_ready");
+        face.setImage("ready");
 
 
         face.getContinueButton().setVisible(false);
@@ -107,7 +109,7 @@ public class VirtualPet
         face.setStats(money,charisma,confidence,felonyProb,happiness,yearsRemaining,tiredness,stress);
         face.getContinueButton().setVisible(true);
         face.hideAllButtons();
-        face.setImage("cat_suit");
+        face.setImage("suit");
         face.setMessage("Congratulations! You have just inherited 100 bucks. You decide to " +
                 "go to New York to be the next big billionare. Can you do it?");
         updateScoreboard();
@@ -261,7 +263,7 @@ public class VirtualPet
             String companies[] = {"Slack", "Pied Piper", "Hound Sniffer", "Spencer Floyd's startup", "Wafeeq's startup"}; //You need variety in your investments
             face.setMessage("You decided to invest in " + companies[(int) (Math.random() * companies.length)] //just makes sure you have a diverse portfolio
                     + "!" + " Great choice!");
-            face.setImage("cat_phone"); //cute lil' photo of a cat acting like a human
+            face.setImage("phone"); //cute lil' photo of a cat acting like a human
             money *= 1.2; //money increased by 20% because that's pretty fair. most of my investments end up like this
             stress += 3;  // the possibility of losing money is always stressful, right?
             happiness += 2; // the pet knows it's making money ergo it's happy
@@ -298,7 +300,7 @@ public class VirtualPet
             happiness += 5; //generally speaking, the more you relax, the more content you are with life
             money -= 10; // This is capitalist America! Can't loaf around *all* day now. Fellow worker, today is a working day! What will we work on today?
             face.setMessage("You just slept and feel like a million bucks!"); //just toying with the users' emotions at this point
-            face.setImage("cat_sleep"); // also to toy with user emotions
+            face.setImage("sleep"); // also to toy with user emotions
             if (happiness >= 20) // I don't want happiness to exceed 20, for sake of keeping the game fair. I could easily beat it if happiness went over 20
             {
                 happiness = 20; // acts as a ceiling (did I spell that correctly?)
@@ -339,7 +341,7 @@ public class VirtualPet
         }
         else if (stress > 20 || tiredness > 20) //this will kill you if your pet is too stressed or tired. Again, the emotion ceiling is 20!
         {
-            face.setImage("cat_tired"); // sad cat
+            face.setImage("tired"); // sad cat
             face.wipeText();
             face.setMessage("You are too depressed to move on. You quit! Your score: " + money + ". Play again!"); // informs the user of their failure
             gameover = true;
@@ -365,7 +367,7 @@ public class VirtualPet
         {
             if (money >= 110) //can't go broke just buying cars. checks to see if this purchase is smart fiscally
             {
-                face.setImage("cat_car");
+                face.setImage("car");
                 face.setMessage("Wow, look at you. Going to get all the hunnies!"); // I threw this in there just to let the user know they are popular
                 charisma += 5; // with a nice car comes great arrogance
                 confidence += 4; // it feels better to drive a lambo than it does to drive a Prius (sorry Prius drivers, wish I got your milage, though)
@@ -376,7 +378,7 @@ public class VirtualPet
             } else //this just tells the user they need more money. doesn't count as a year of work though
             {
                 face.setMessage("You're too poor!"); //great encouragement!
-                face.setImage("cat_sad"); // see: above
+                face.setImage("sad"); // see: above
 
             }
         }
@@ -390,7 +392,7 @@ public class VirtualPet
             String stocks[] = {"Micron technology", "Square cash", "Activision", "DXC technology"}; // stores multiple thriving stocks in an array for later user
             face.setMessage("You decided to invest in " + stocks[(int) (Math.random() * stocks.length)] //calls a random string for the user to invest in
                     + "!" + " Great choice!");
-            face.setImage("cat_cool"); //who doesn't feel cool after making $10 on a $400 investment?
+            face.setImage("cool"); //who doesn't feel cool after making $10 on a $400 investment?
             money *= 1.1; //10% increase is pretty fair in my opinion. Have to make this game fun somehow
             stress += 1; //i know how stressful it is to invest � trust me
             confidence += 2; // I also felt super cool
@@ -404,7 +406,7 @@ public class VirtualPet
     {
         checkIfDone(); //has the user really messed up yet?
         if (!gameover) {
-            face.setImage("cat_tired"); // more work = less sleep = tiredness
+            face.setImage("tired"); // more work = less sleep = tiredness
             face.setMessage("The grind never stops"); //this is just a ploy for the user to overwork the pet and play more, thus boosting my ad revenue
             tiredness += 3; // more work = less sleep
             money *= 1.2; // time and a half would be ridiculous in this scenario
@@ -423,7 +425,7 @@ public class VirtualPet
             if (charisma > 10 && confidence > 10) //pretty high stats!
             {
                 money += 50; //more money from a bigger sale because you're cool now and that makes your opinion valuable
-                face.setImage("cat_cool"); // cool cat = bigger sales
+                face.setImage("cool"); // cool cat = bigger sales
                 face.setMessage("Wow! You just closed a huge sale."); // let the user know how well they did
                 yearsRemaining--; //minus un ano
                 face.setStats(money, charisma, confidence, felonyProb, happiness, yearsRemaining, tiredness, stress);
@@ -432,14 +434,14 @@ public class VirtualPet
                 money += 25; // not too much money but a good amount
                 charisma += 1; // boost those traits
                 confidence += 2; // more experience = bigger ego
-                face.setImage("cat_suit"); // looks presidential
+                face.setImage("suit"); // looks presidential
                 face.setMessage("Not too bad. But you can improve!");  // Lets the user know that they're not as hot as they might think
                 yearsRemaining--; //minus one year
                 face.setStats(money, charisma, confidence, felonyProb, happiness, yearsRemaining, tiredness, stress);
             } else {
                 money -= 25; // the user blew a sale
                 face.setMessage("You weren't prepared to make the sale. You need more confidence"); // lack of experience != good salesman
-                face.setImage("cat_tired"); //sad user
+                face.setImage("tired"); //sad user
                 yearsRemaining--; //minus one year
                 face.setStats(money, charisma, confidence, felonyProb, happiness, yearsRemaining, tiredness, stress);
             }
@@ -453,7 +455,7 @@ public class VirtualPet
             stress += 3; // when you break the law like this, you are bound to carry some stress, lol
             if (felonyProb > 15) // yeah the user has been too greedy. they were caught
             {
-                face.setImage("cat_jail"); //cat's now in jail
+                face.setImage("jail"); //cat's now in jail
                 face.setMessage("You have been caught! Five years in jail for you!"); // this is a light sentence
                 yearsRemaining -= 5; // five wasted years
                 felonyProb = 0; //well you probably won't be caught now
@@ -465,20 +467,20 @@ public class VirtualPet
                     money /= 2; //repo the money
                 } else {
                     face.setMessage("You're broke! You lose!"); //nice encouragement
-                    face.setImage("cat_sad"); // sad cat lost the game
+                    face.setImage("sad"); // sad cat lost the game
                     resetGame();
                 }
                 face.setStats(money, charisma, confidence, felonyProb, happiness, yearsRemaining, tiredness, stress);
             } else if (felonyProb > 0 && felonyProb < 15) //a lot more stressed
             {
-                face.setImage("cat_greed"); // like the Wolf of Wallstreet, they get evil
+                face.setImage("greed"); // like the Wolf of Wallstreet, they get evil
                 face.setMessage("Can't say I condone this, but whatever makes you happy. Just be careful."); // give the user a fair warning
                 stress *= 1.5; // more money laundered = way more stress
                 felonyProb += 5; // increase odds of a felony
                 yearsRemaining--; // minus one year
                 face.setStats(money, charisma, confidence, felonyProb, happiness, yearsRemaining, tiredness, stress);
             } else {
-                face.setImage("cat_stress"); // a cat could be stressed after this
+                face.setImage("stress"); // a cat could be stressed after this
                 face.setMessage("Yeah, you're saving money. But you're stressed now!"); // pretty snarky message to warn the user
                 money *= 2; // I have never money laundered, so I can't give an accurate figure on how much it saves you. High risk, high yield, though
                 charisma += 2; // this comes with the more money
