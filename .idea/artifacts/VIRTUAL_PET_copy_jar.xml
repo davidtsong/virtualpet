@@ -1,0 +1,12 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="VIRTUAL PET copy:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/VIRTUAL_PET_copy_jar</output-path>
+    <root id="archive" name="VIRTUAL PET copy.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/../Exports/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="module-output" name="VIRTUAL PET copy" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/resty-0.3.2.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
