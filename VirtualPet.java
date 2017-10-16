@@ -555,6 +555,13 @@ public class VirtualPet
                 moneyLaunder();
             }
         });
+        face.getMakeSaleButton().addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                makeSale();
+            }
+        });
     }
     
     protected void chooseRabbit() {
