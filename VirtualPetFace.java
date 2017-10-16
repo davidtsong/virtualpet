@@ -27,10 +27,10 @@ import javax.swing.Timer;
 import javax.swing.border.Border;
 
 
-public class VirtualPetFace extends JFrame implements ActionListener{
+public class VirtualPetFace extends JFrame implements ActionListener {
 
-    private final int WIDTH = 600;
-    private final int HEIGHT = 500;
+    private final int WIDTH = 1000;
+    private final int HEIGHT = 800;
     private ImagePanel imagePanel;
     private JTextPane textArea;
     private String base;
@@ -50,23 +50,30 @@ public class VirtualPetFace extends JFrame implements ActionListener{
     private JButton buyStocksButton;
     private JButton moneyLaunderButton;
     private JButton workOvertimeButton;
+    private JButton makeSaleButton;
+    private boolean guiCreated = false;
     private JButton startButton;
+    private JTextPane _textAreaStats;
+    private JTextPane _textAreaScores;
 
     private static final String imageBase = "./pet_images/";
 
-    public VirtualPetFace()
-    {
+    public VirtualPetFace() {
         try {
             javax.swing.SwingUtilities.invokeAndWait(new Runnable() {
                 public void run() {
-                    createGUI();
+                    if (!guiCreated) {
+                        guiCreated = true;
+                        createGUI();
+
+                    }
                 }
             });
         } catch (Exception e) {
             System.err.println("createGUI didn't successfully complete");
         }
-
         init();
+
     }
 
     public void init() {
@@ -78,14 +85,8 @@ public class VirtualPetFace extends JFrame implements ActionListener{
         //timer.setInitialDelay(1000);
 
         getAllImages();
-        resetButton = new JButton("resetButton");
-        resetButton.setBounds(WIDTH + 10, 300, 100, 20);
-        add(resetButton);
 
-        continueButton = new JButton ("Start");
-        continueButton.setBounds(WIDTH + 25, 300, 100, 20);
-        add(continueButton);
-        setBackground();
+//        setBackground();
         //setImage("angel");
         //setMessage("Hello, and Welcome!");
     }
@@ -107,25 +108,85 @@ public class VirtualPetFace extends JFrame implements ActionListener{
         imagePanel.setBorder(BorderFactory.createLineBorder(Color.black, 2));
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 1;
+        c.gridx = 3;
         c.gridy = 1;
-        contentPane.add(imagePanel,c);
+        contentPane.add(imagePanel, c);
 
         textArea = new JTextPane();
         textArea.setEditable(false);
         JScrollPane scroll = new JScrollPane(textArea);
-        scroll.setPreferredSize(new Dimension(width, height/2));
-        scroll.setSize(new Dimension(width, height/2));
-        textArea.setPreferredSize(new Dimension(width, height/2));
-        textArea.setSize(new Dimension(width, height/2));
-
+        scroll.setPreferredSize(new Dimension(width, height ));
+        scroll.setSize(new Dimension(width, height ));
+        textArea.setPreferredSize(new Dimension(width, height ));
+        textArea.setSize(new Dimension(width, height));
 
         c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridwidth = 2;
-        c.gridx = 0;
+        c.gridx = 3;
         c.gridy = 2;
-        c.ipady = 20;
+        c.weighty = 1;
+        c.gridheight = 2;
         contentPane.add(scroll, c);
+
+        _textAreaStats = new JTextPane();
+        _textAreaStats.setEditable(false);
+        _textAreaStats.setPreferredSize(new Dimension(width, height ));
+        _textAreaStats.setSize(new Dimension(width, height));
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 3;
+        c.gridy = 4;
+        c.weighty = .5;
+        contentPane.add(_textAreaStats, c);
+
+        _textAreaScores = new JTextPane();
+        _textAreaScores.setEditable(false);
+        JScrollPane _scrollScores = new JScrollPane(_textAreaScores);
+        _scrollScores.setPreferredSize(new Dimension(width, height));
+        _scrollScores.setSize(new Dimension(width, height));
+        _textAreaScores.setPreferredSize(new Dimension(width, height));
+        _textAreaScores.setSize(new Dimension(width, height));
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 6;
+        c.insets = new Insets(0,40,0,0);
+        c.gridy = 0;
+        contentPane.add(_scrollScores, c);
+
+        continueButton = new JButton("Start");
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 5;
+        c.gridy = 5;
+        contentPane.add(continueButton, c);
+
+        resetButton = new JButton("resetButton");
+
+        c.gridx = 0;
+        c.gridy = 1;
+        c.gridheight = 1;
+        c.weighty = 0;
+        c.insets = new Insets(0,0,0,30);
+        contentPane.add(resetButton, c);
+
+
+        investButton = new JButton("Invest");
+        c.gridy = 2;
+        contentPane.add(investButton, c);
+        relaxButton = new JButton("Relax");
+        c.gridy = 3;
+        contentPane.add(relaxButton, c);
+        buyNewCarButton = new JButton("Buy Car");
+        c.gridy = 4;
+        contentPane.add(buyNewCarButton, c);
+        buyStocksButton = new JButton("Buy Stock");
+        c.gridy = 5;
+        contentPane.add(buyStocksButton, c);
+        moneyLaunderButton = new JButton("Money Launder");
+        c.gridy = 6;
+        contentPane.add(moneyLaunderButton, c);
+        workOvertimeButton = new JButton("Work Overtime");
+        c.gridy = 7;
+        contentPane.add(workOvertimeButton, c);
+        makeSaleButton = new JButton("Make Sale");
+        c.gridy = 8;
+        contentPane.add(makeSaleButton, c);
 
         setLocationRelativeTo(null);
         setVisible(true);
@@ -135,7 +196,7 @@ public class VirtualPetFace extends JFrame implements ActionListener{
     }
 
     private void setBackground() {
-        Image backImage = createImage(base+"background.png", "");
+        Image backImage = createImage(base + "background.png", "");
         Border bkgrnd = new CentredBackgroundBorder(backImage);
         ((JComponent) getContentPane()).setBorder(bkgrnd);
     }
@@ -167,19 +228,18 @@ public class VirtualPetFace extends JFrame implements ActionListener{
 
     public void getAllImages() {
         File dir = new File(base);
-        files  = dir.list();
+        files = dir.list();
         allPics = new Image[files.length];
         for (int i = 0; i < files.length; i++) {
             //System.err.println(files[i]);
-            allPics[i]=createImage(base + files[i],"");
+            allPics[i] = createImage(base + files[i], "");
 
         }
         //System.err.println(pics.size());
     }
 
 
-    public void getImages(final String mood)
-    {
+    public void getImages(final String mood) {
 
         for (int i = 0; i < files.length; i++) {
             if (files[i].contains(mood)) {
@@ -189,17 +249,35 @@ public class VirtualPetFace extends JFrame implements ActionListener{
         //System.err.println(pics.size());
     }
 
-    public void setMessage(String message)
-    {
+    public void setMessage(String message) {
         String current = textArea.getText();
         textArea.setText(current + "\n" + message);
         textArea.select(current.length(), (current.length() + message.length() + 1));
     }
 
-
-    public class ImagePanel extends JPanel
+    public void setScoreboard(String message)
     {
-        public ImagePanel( ) {
+        _textAreaScores.setText(message);
+    }
+
+    public void setStats(double money, int charisma, int confidence, int felonyProb, int happiness, int yearsRemaining, int tiredness, int stress) {
+
+        _textAreaStats.setText
+                (
+                        "Money: " + money + "\n" +
+                        "Charisma: " + charisma + "\n" +
+                        "Confidence " + confidence + "\n" +
+                        "Felony Prob: " + felonyProb + "\n" +
+                        "Happiness: " + happiness + "\n" +
+                        "Years Remaining:  " + yearsRemaining + "\n" +
+                        "Tiredness: " + tiredness + "\n" +
+                        "Stress: " + stress + "\n"
+                );
+    }
+
+
+    public class ImagePanel extends JPanel {
+        public ImagePanel() {
             super();
         }
 
@@ -212,8 +290,7 @@ public class VirtualPetFace extends JFrame implements ActionListener{
 
     }
 
-    public class CentredBackgroundBorder implements Border
-    {
+    public class CentredBackgroundBorder implements Border {
         private final Image image;
 
         public CentredBackgroundBorder(Image image) {
@@ -221,11 +298,11 @@ public class VirtualPetFace extends JFrame implements ActionListener{
         }
 
         public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
-            g. drawImage(image, 0, 0, VirtualPetFace.this.getWidth(), VirtualPetFace.this.getHeight(),null);
+            g.drawImage(image, 0, 0, VirtualPetFace.this.getWidth(), VirtualPetFace.this.getHeight(), null);
         }
 
         public Insets getBorderInsets(Component c) {
-            return new Insets(0,0,0,0);
+            return new Insets(0, 0, 0, 0);
         }
 
         public boolean isBorderOpaque() {
@@ -233,65 +310,58 @@ public class VirtualPetFace extends JFrame implements ActionListener{
         }
     }
 
-    public JButton getContinueButton()
-    {
+    public JButton getContinueButton() {
         return continueButton;
     }
 
+    public Timer getTimer() {
+        return this.timer;
+    }
 
-    public JButton getStartButton()
-    {
+    public JButton getStartButton() {
         return startButton;
     }
 
-    public JButton getCatButton()
-    {
+    public JButton getCatButton() {
         return catButton;
     }
 
-    public JButton getDogButton()
-    {
+    public JButton getDogButton() {
         return dogButton;
     }
 
-    public JButton getInvestButton()
-    {
+    public JButton getInvestButton() {
         return investButton;
     }
 
-    public JButton getRelaxbutton()
-    {
+    public JButton getRelaxbutton() {
         return relaxButton;
     }
 
-    public JButton getBuyNewCarButton()
-    {
+    public JButton getBuyNewCarButton() {
         return buyNewCarButton;
     }
 
-    public JButton getBuyStocksButton()
-    {
-        return moneyLaunderButton;
+    public JButton getBuyStocksButton() {
+        return buyStocksButton;
     }
 
-    public JButton getWorkOvertimeButton()
-    {
+    public JButton getWorkOvertimeButton() {
         return workOvertimeButton;
     }
 
-    public JButton getResetButton()
-    {
+    public JButton getResetButton() {
         return resetButton;
     }
 
-    public JButton getMoneyLaunderButton()
-    {
+    public JButton getMoneyLaunderButton() {
         return moneyLaunderButton;
     }
 
-    /*public void hideAllButtons()
-    {
-        startButton.setVisible(false);
+    public JButton getMakeSaleButton(){return makeSaleButton;}
+
+    public void hideAllButtons() {
+
         investButton.setVisible(false);
         relaxButton.setVisible(false);
         buyNewCarButton.setVisible(false);
@@ -299,8 +369,25 @@ public class VirtualPetFace extends JFrame implements ActionListener{
         moneyLaunderButton.setVisible(false);
         workOvertimeButton.setVisible(false);
         resetButton.setVisible(false);
+        makeSaleButton.setVisible(false);
     }
-    */
+
+    public void showAllButtons() {
+
+        investButton.setVisible(true);
+        relaxButton.setVisible(true);
+        buyNewCarButton.setVisible(true);
+        buyStocksButton.setVisible(true);
+        moneyLaunderButton.setVisible(true);
+        workOvertimeButton.setVisible(true);
+        resetButton.setVisible(true);
+        makeSaleButton.setVisible(true);
+    }
+
+    public void wipeText() {
+        this.textArea.setText("");
+    }
+
 }
 
 

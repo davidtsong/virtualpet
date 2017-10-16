@@ -31,21 +31,30 @@ public class Leaderboard {
         }
     }
 
-    public void listEntries() {
+    public String listEntries() {
         try {
+            StringBuilder message = new StringBuilder("Recent Scores: \n");
 
             JSONObject stem = r.json(url+"Entries.json").toObject();
 //            System.out.println(stem.object());
             for(int i = 0; i < stem.length(); i++)
             {
-                System.out.println(stem.get(stem.names().getString(i)));
+//                System.out.println(stem.get(stem.names().getString(i)));
+                JSONObject leaf = stem.getJSONObject(stem.names().getString(i));
+                String name = leaf.getString("Name");
+                int score = leaf.getInt("Score");
+                message.append("Name: " + name  + " Score: " + score + "\n");
             }
             System.out.println(stem.names());
             System.out.println(stem.get(stem.names().getString(0)));
 
+            return message.toString();
+
         } catch (Exception e) {
             System.err.println("IOException : " + e.getMessage());
+            return "School wifi broke this";
         }
+
     }
     public void postEntry(String name, int score){
         try {
