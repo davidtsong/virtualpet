@@ -55,14 +55,14 @@ public class VirtualPet
         });
         
         face.setPetType("cat");
-
+        
         initializeButtons();
         face.hideAllButtons();
     }
     
     public void tick() throws InterruptedException {
         boolean isAlive = true;
-    	while (isAlive && !forceKill) {
+    	while (isAlive && !forceKill && !gameover) {
             checkCommands();
             isAlive = checkVitals();
         }
@@ -157,7 +157,7 @@ public class VirtualPet
     			isRecognizedCommand = true;
     			forceKill = true;
     		}
-    		if (input.contains(":")) {
+    		if (input.contains(":") && !isRecognizedCommand) {
     			int colonIndex = input.indexOf(':');
     			String cmnd = input.substring(0, colonIndex).trim();
     			String args = input.substring(colonIndex+1).trim();
@@ -204,7 +204,7 @@ public class VirtualPet
     	face.setMessage(message);
     }
     private void read(String input) {
-    	face.setMessage("    owner: \""+input+"\"");
+    	face.setMessage("   owner: \""+input+"\"");
     }
     private void wrongCommand() {
     	say("I don't know that one.");
