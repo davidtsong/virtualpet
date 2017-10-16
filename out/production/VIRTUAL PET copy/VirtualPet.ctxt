@@ -1,0 +1,12 @@
+#BlueJ class context
+comment0.target=VirtualPet
+comment0.text=\ Virtual\ Pet\ version\ 1.0.1\n\ \n\ @author\ Jack\ Rosetti\n\ @author\ Still\ Jack\ Rosetti\n
+comment1.params=
+comment1.target=VirtualPet()
+comment2.params=
+comment2.target=void\ feed()
+comment3.params=
+comment3.target=void\ exercise()
+comment4.params=
+comment4.target=void\ sleep()
+numComments=5

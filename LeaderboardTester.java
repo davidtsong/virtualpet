@@ -5,6 +5,6 @@ public class LeaderboardTester{
         Leaderboard leaderboard = new Leaderboard();
 //        leaderboard.ping();
 //        leaderboard.listEntries();
-        leaderboard.postEntry("Dad",100);
+        leaderboard.postEntry("Mr. Fagan",100000000);
     }
 }

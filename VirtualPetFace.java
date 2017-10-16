@@ -276,6 +276,7 @@ public class VirtualPetFace extends JFrame implements ActionListener {
     }
 
 
+
     public class ImagePanel extends JPanel {
         public ImagePanel() {
             super();

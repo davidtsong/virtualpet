@@ -59,7 +59,7 @@ public class VirtualPet
         face.showAllButtons();
     }
 
-    private void resetGame() // really just resets the stats here
+    public void resetGame() // really just resets the stats here
     {
         money = 100;
         charisma = 1;
@@ -84,7 +84,17 @@ public class VirtualPet
     {
         face.setScoreboard(l.listEntries());
     }
-
+    public void printStats()
+    {
+        System.out.println( "Money: " + money + "\n" +
+                "Charisma: " + charisma + "\n" +
+                "Confidence " + confidence + "\n" +
+                "Felony Prob: " + felonyProb + "\n" +
+                "Happiness: " + happiness + "\n" +
+                "Years Remaining:  " + yearsRemaining + "\n" +
+                "Tiredness: " + tiredness + "\n" +
+                "Stress: " + stress + "\n");
+    }
 
     public void invest() {
         checkIfDone(); //sees if the pet has died from any number of crazy things
@@ -282,7 +292,7 @@ public class VirtualPet
         checkIfDone(); // is the pet dead?
         if(!gameover) {
             stress += 3; // when you break the law like this, you are bound to carry some stress, lol
-            if (felonyProb > 15) // yeah the user has been too greedy. they were caught
+            if (felonyProb >= 15) // yeah the user has been too greedy. they were caught
             {
                 face.setImage("cat_jail"); //cat's now in jail
                 face.setMessage("You have been caught! Five years in jail for you!"); // this is a light sentence
