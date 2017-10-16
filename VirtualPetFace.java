@@ -16,14 +16,7 @@ import java.awt.*;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextPane;
-import javax.swing.Timer;
+
 import javax.swing.border.Border;
 
 
@@ -39,6 +32,12 @@ public class VirtualPetFace extends JFrame implements ActionListener {
     private Image[] allPics;
     private ArrayList<Image> pics;
     private Timer timer;
+    
+    private final int TIMERSPEED = 60;
+    
+    private JTextField inputArea;
+    private String inputText;
+    private boolean newInput;
 
     private JButton catButton;
     private JButton dogButton;
@@ -55,6 +54,17 @@ public class VirtualPetFace extends JFrame implements ActionListener {
     private JButton startButton;
     private JTextPane _textAreaStats;
     private JTextPane _textAreaScores;
+    
+    private boolean newImageSet;
+    private String currentImageGroup;//	added by nate, the current group of images ex: petType+"_"+mood+"_"+("intro", "cycle", or "outro")
+    private int currentFrame;//			added by nate, what frame the current pic is set to
+    private int numberOfFrames;//		added by nate, how many total frames there are in current mood
+    private boolean isEndOfLoop;//		added by nate, is at the last frame of a loop
+    private int numberOfLoops;//		added by nate, how many total loops there should be before changing mood
+    private int currentLoop;//			added by nate, the current loop in my image cycling method
+    private String currentMood;//		added by nate, stores the current mood
+    private String petType;//			added by nate, word prier to the mood in the picture
+
 
     private static final String imageBase = "./pet_images/";
 
@@ -81,7 +91,7 @@ public class VirtualPetFace extends JFrame implements ActionListener {
 
         base = curDir + "/" + imageBase;
         pics = new ArrayList<Image>();
-        timer = new Timer(400, this);
+        timer = new Timer(TIMERSPEED, this);
         //timer.setInitialDelay(1000);
 
         getAllImages();
@@ -119,6 +129,16 @@ public class VirtualPetFace extends JFrame implements ActionListener {
         scroll.setSize(new Dimension(width, height ));
         textArea.setPreferredSize(new Dimension(width, height ));
         textArea.setSize(new Dimension(width, height));
+        
+        inputArea = new JTextField();
+        inputArea.setBounds(20, 20, width, height/4);
+        inputArea.setToolTipText("Enter a command here.");
+        inputArea.setSize(200, 200);
+        inputArea.setText("Enter a command here");
+        inputArea.setEditable(true);
+    	inputArea.addActionListener(this);
+    	add(inputArea);
+    	newInput = false;
 
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 3;
@@ -205,25 +225,148 @@ public class VirtualPetFace extends JFrame implements ActionListener {
         return new ImageIcon(path, description).getImage();
     }
 
-    public void setImage(String mood) {
-        timer.stop();
-        pics.clear();
-        getImages(mood);
-        timer.start();
+    public void setPetType(String petType) {
+        this.petType = petType;
+    }
+    
+    public String getPetType() {
+    	return this.petType;
     }
 
     public void actionPerformed(ActionEvent e) {
-        loopslot++;
-
-        if (loopslot >= pics.size()) {
+    	Object source = e.getSource();
+    	//-----------------------------start built-in
+    	loopslot++;
+	    
+    	if (loopslot >= pics.size()) {
             loopslot = 0;
         }
-
+        
         imagePanel.repaint();
-
+        
+        if (newImageSet) {
+        	loopslot = currentFrame;
+        	newImageSet = false;
+        }
         if (loopslot == pics.size()) {
             timer.restart();
         }
+        //-------------------------------end built-in
+    	
+        if (source.equals(inputArea)) {
+        	String input;
+//        	System.out.println("test-1");
+        	try {
+        		input = inputArea.getText();
+        		setInput(input);
+//        		System.out.println(input);
+        	} catch (NullPointerException exception) {
+        		input = "";
+        		System.err.println("nullPointerException");
+        	}
+        }
+    }
+    
+    public void setImage(String mood) {
+        timer.stop();
+        pics.clear();
+        currentLoop = 0;
+        numberOfLoops = 1;
+        currentFrame = 0;
+        isEndOfLoop = false;
+        getImages(mood);
+        timer.start(); 
+    }
+    
+    public void setImage(String mood, int loops) {
+    	timer.stop();
+        pics.clear();
+        numberOfLoops = loops;
+        currentLoop = 0;
+        currentFrame = 0;
+        isEndOfLoop = false;
+        getImages(mood);
+        timer.start(); 
+    }
+    
+    public void setImageGroupCycle(String moodGroup, int cycles) {
+    	setImage(moodGroup+"_intro");
+    	endPicLoop(moodGroup+"_cycle", cycles);
+    	currentImageGroup = moodGroup;
+    	endPicLoop(moodGroup+"_outro");
+    	endPicLoop();
+    	currentImageGroup = "normal";
+    	
+    }
+    public void setImageGroup(String moodGroup) {
+    	setImage(moodGroup+"_intro", 1);
+    	endPicLoop(moodGroup+"_cycle");
+    	currentImageGroup = moodGroup;
+    }
+    public void endImageGroup() {
+    	endPicLoop(currentImageGroup+"_outro", 1);
+    	endPicLoop();
+    	currentImageGroup = "normal";
+    	
+    }
+    
+    public void endPicLoop() {
+    	if (!currentMood.equals("normal")) {
+    		int var;
+    		for (currentLoop = 0; currentLoop<numberOfLoops; currentLoop++) {
+    			var = 0;
+    			while (!isEndOfLoop) {
+    				var++;
+    				System.out.print("");
+    			}
+    			
+    			isEndOfLoop = false;
+    		}
+    		setImage("normal");
+    		
+    	}
+    }
+    public void endPicLoop(String newMood) {
+    	if (!currentMood.equals(newMood)) {
+//    		System.out.println("test-3"); // --------------------------------------
+    		int var;
+    		for (currentLoop = 0; currentLoop<numberOfLoops; currentLoop++) {
+    			var = 0;
+    			while (!isEndOfLoop) {
+    				var++;
+    				System.out.print("");
+    			}
+//    			System.out.println("test-1");
+    			isEndOfLoop = false;
+    		}
+//    		System.out.println("test-2");
+    		setImage(newMood);
+    	}
+    }
+    public void endPicLoop(String newMood , int newLoopVal) {
+    	if (!currentMood.equals(newMood)) {
+    		for (currentLoop = 0; currentLoop<numberOfLoops; currentLoop++) {
+    			while (!isEndOfLoop) {
+    				System.out.print("");
+    			}
+    			isEndOfLoop = false;
+    		}
+    		setImage(newMood, newLoopVal);
+    	}
+    }
+
+    private void setInput(String input) {
+		newInput = true;
+		inputText = input;
+	}
+    public String getInput() {
+    	if (newInput) {
+    		newInput = false;
+//    		System.out.println("getInput test: "+inputText);
+    		return inputText;
+    	}
+//    	System.err.println("getInput test failed: "+inputText+"\n  newInput: "+newInput);
+    	return "";
     }
 
     public void getAllImages() {
@@ -240,14 +383,20 @@ public class VirtualPetFace extends JFrame implements ActionListener {
 
 
     public void getImages(final String mood) {
-
+        numberOfFrames = 0;
+        currentMood = mood;
         for (int i = 0; i < files.length; i++) {
-            if (files[i].contains(mood)) {
+            if (files[i].contains(petType+"_"+mood)) {
                 pics.add(allPics[i]);
+                numberOfFrames++;
+//                    System.out.println(files[i]+", "+numberOfFrames);
+                
             }
         }
+        newImageSet = true;
         //System.err.println(pics.size());
     }
+
 
     public void setMessage(String message) {
         String current = textArea.getText();
@@ -277,7 +426,7 @@ public class VirtualPetFace extends JFrame implements ActionListener {
 
 
     public class ImagePanel extends JPanel {
-        public ImagePanel() {
+        public ImagePanel( ) {
             super();
         }
 
@@ -285,6 +434,11 @@ public class VirtualPetFace extends JFrame implements ActionListener {
             super.paintComponent(g);
             if (pics.size() > 0) {
                 g.drawImage(pics.get(loopslot), 0, 0, this.getWidth(), this.getHeight(), null);
+                currentFrame++;
+                if (currentFrame == numberOfFrames) {
+                	isEndOfLoop = true;
+                	currentFrame = 0;
+                }
             }
         }
 

@@ -7,6 +7,10 @@
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.Timer;
+
+import com.nathanruff.baseconverter.Converter;
+import com.nathanruff.baseconverter.Formater;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -24,9 +28,16 @@ public class VirtualPet
     private int yearsRemaining = 20;
     private int tiredness = 1;
     private int stress = 1;
+    private int hunger = 0;
     private Timer timer;
     private boolean gameover = false;
+    
+    private String petName = "";
+    
+    private boolean forceKill;
+    
     private Leaderboard l;
+	
     // constructor
     public VirtualPet()
     {
@@ -46,6 +57,26 @@ public class VirtualPet
         initializeButtons();
         face.hideAllButtons();
     }
+    
+    public void tick() throws InterruptedException {
+        boolean isAlive = true;
+    	while (isAlive && !forceKill) {
+            checkCommands();
+            isAlive = checkVitals();
+        }
+    	
+    }
+    
+    public boolean checkVitals() { // returns the boolean true if VP is still alive
+    	boolean isAlive = true;
+    	if (tiredness > 15 && hunger > 12) 
+        {
+            face.setMessage("Darn!");
+            face.setImage("dead");
+            isAlive = false;
+        }
+    	return isAlive;
+	}
 
 
     public void initialize()
@@ -67,6 +98,8 @@ public class VirtualPet
         felonyProb = 0;
         happiness = 15;
         tiredness = 1;
+        stress = 1;
+        hunger = 0;
         yearsRemaining = 20;
 
         face.wipeText(); //supposed to clear the face.setMessage box
@@ -84,7 +117,143 @@ public class VirtualPet
     {
         face.setScoreboard(l.listEntries());
     }
+    
+    private void checkCommands() throws InterruptedException { // checks the commands sent by the user input line and executes them
+		String input;
+    	if (true) {//this.scan.hasNextLine()) {
+    		input = getGUICommand().toLowerCase();
+    		boolean isRecognizedCommand = false;
+    		
+    		read(input);
+    		switch (input) {
+    		case "exercise":
+    		case "jump":
+    			exercise(3);
+    			face.endPicLoop();
+    			isRecognizedCommand = true;
+    			break;
+    		case "feed":
+    		case "eat":
+    			feed();
+    			face.endPicLoop();
+    			Thread.sleep(2000);
+    			isRecognizedCommand = true;
+    			break;
+    		case "sleep":
+    		case "go to sleep":
+    			sleep(3);
+    			face.endPicLoop();
+    			isRecognizedCommand = true;
+    			break;
+    		case "do a magic trick":
+    		case "magic trick":
+    			isRecognizedCommand = true;
+    			magicTrick();
+    			face.endPicLoop();
+    			break;
+    		case "play dead":
+    			isRecognizedCommand = true;
+    			forceKill = true;
+    		}
+    		if (input.contains(":")) {
+    			int colonIndex = input.indexOf(':');
+    			String cmnd = input.substring(0, colonIndex).trim();
+    			String args = input.substring(colonIndex+1).trim();
+    			switch (cmnd) {
+    			case "solve":
+    				isRecognizedCommand = true;
+        			face.setImageGroup("deep-thought");
+        			String eq = args;
+        			String output;
+        			output = Converter.main(Formater.main(eq));
+        			//Thread.sleep(2000);
+        			face.endImageGroup();
+        			say(output);
+        			//sendUserOutput(output);
+    				break;
+    			case "set name":
+    			case "setname":
+    			case "name":
+    				isRecognizedCommand = true;
+    				this.petName = ((char) (args.charAt(0)&223))+args.substring(1);
+    				say("My name is now "+this.petName);
+    				break;
+    			case "type":
+    			case "settype":
+    			case "set type":
+    				isRecognizedCommand = true;
+    				args = (args.equals("rabbit"))? "host":args;
+    				face.setPetType(args);
+    				face.setImage("normal");
+    				break;
+    			}
+    		}
+    		
+			if (!isRecognizedCommand) {
+    			say("Could you repeat that");
+    			
+//    			listCommands();
+    		}
+    	}
+		
+	}
+    
+    private void say(String message) {
+    	face.setMessage(message);
+    }
+    private void read(String input) {
+    	face.setMessage("    owner: \""+input+"\"");
+    }
+    private void wrongCommand() {
+    	say("I don't know that one.");
+    }
+    
+    private void magicTrick() {
+    	if (face.getPetType().equals("host")) {
+	    	hunger+=4;
+	    	tiredness+=6;
+	    	face.setMessage("And now, watch as I disapear.");
+			face.setImageGroupCycle("disapear", 4);
+    	} else {
+    		wrongCommand();
+    	}
+		
+	}
+    
+    private String getGUICommand() {
+    	String input = "";
+    	while (input.equals("")) {
+    		input = face.getInput();
+    		System.out.print("");
+    	}
+//    	System.out.println("input: "+input);
+    	return input;
+    	
+    }
 
+    public void feed() {
+        hunger = (hunger > 10)? hunger-10 : 0;
+        tiredness+=2;
+        face.setMessage("Yum, thanks");
+        face.setImage("normal", 1);
+        
+    }
+    
+    public void exercise(int loops) {
+        hunger+=3;
+        tiredness+=5;
+        face.setMessage("1, 2, 3, jump.  Whew.");
+        face.setImage("tired", loops);
+    }
+    
+    public void sleep(int loops) {
+        hunger+=1;
+        tiredness=0;
+        face.setMessage("zzzzzzzzzz");
+        if (face.getPetType().equals("host"))
+        	face.setImageGroupCycle("sleep", loops);
+        else face.setImage("asleep");
+    }
 
     public void invest() {
         checkIfDone(); //sees if the pet has died from any number of crazy things
@@ -372,6 +541,23 @@ public class VirtualPet
             }
         });
     }
+    
+    protected void chooseRabbit() {
+		
+		face.setPetType("host");
+	}
+
+
+	protected void chooseDog() {
+		
+		face.setPetType("dog");
+	}
+
+
+	protected void chooseCat() {
+		
+		face.setPetType("cat");
+	}
 
 
 } // end Virtual Pet
