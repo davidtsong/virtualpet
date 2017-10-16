@@ -185,11 +185,18 @@ public class VirtualPet
         			say(output);
         			//sendUserOutput(output);
     				break;
+    			case "player":
+    			case "set player":
+    			case "setplayer":
+    				isRecognizedCommand = true;
+    				face.playerName = ((char) (args.charAt(0)&223))+args.substring(1);
+    				
+    				break;
     			case "set name":
     			case "setname":
     			case "name":
     				isRecognizedCommand = true;
-    				this.petName = ((char) (args.charAt(0)&223))+args.substring(1);
+    				face.petName = ((char) (args.charAt(0)&223))+args.substring(1);
     				say("My name is now "+this.petName);
     				break;
     			case "type":
@@ -364,7 +371,7 @@ public class VirtualPet
 
             face.hideAllButtons();
             face.getContinueButton().setVisible(false);
-            l.postEntry("Player 1", (int) money); // TODO: ADD PLAYER NAME FROM TEXT INPUT
+            l.postEntry(face.playerName, (int) money); // TODO: ADD PLAYER NAME FROM TEXT INPUT
             updateScoreboard();
             face.setMessage("Your score has been submitted! Check out the recent scores or start again");
 

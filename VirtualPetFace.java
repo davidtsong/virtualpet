@@ -64,6 +64,8 @@ public class VirtualPetFace extends JFrame implements ActionListener {
     private int currentLoop;//			added by nate, the current loop in my image cycling method
     private String currentMood;//		added by nate, stores the current mood
     private String petType;//			added by nate, word prier to the mood in the picture
+	public String playerName;
+	public String petName;
 
 
     private static final String imageBase = "./pet_images/";
@@ -94,6 +96,9 @@ public class VirtualPetFace extends JFrame implements ActionListener {
         timer = new Timer(TIMERSPEED, this);
         //timer.setInitialDelay(1000);
 
+        playerName = "";
+        petName = "";
+        
         getAllImages();
 
 //        setBackground();
@@ -413,6 +418,8 @@ public class VirtualPetFace extends JFrame implements ActionListener {
 
         _textAreaStats.setText
                 (
+                		"Player: "+playerName+"\n"+
+                		"Pet Name: "+petName+"\n"+
                         "Money: " + money + "\n" +
                         "Charisma: " + charisma + "\n" +
                         "Confidence " + confidence + "\n" +
